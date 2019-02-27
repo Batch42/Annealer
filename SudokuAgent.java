@@ -34,7 +34,7 @@ public class SudokuAgent {
 			}
 		}
 		if (timeout == 100000)
-			System.out.println("Shit timed out yo");
+			System.out.println("time out");
 		return sudokuBoard;
 	}
 
