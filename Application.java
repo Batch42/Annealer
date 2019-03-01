@@ -37,7 +37,7 @@ public class Application {
 			// sudokuFile = fileFind.getSelectedFile();
 
 			try (BufferedReader reader = new BufferedReader(new FileReader(
-					"C:\\Users\\Isaac\\Documents\\School\\College Year 3\\Spring 2019\\COSC 370.01\\Projects\\Project 2\\sudoku\\sudoku1.csv"))) {
+					"sudoku1.csv"))) {
 
 				String line = "";
 				{
