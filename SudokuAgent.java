@@ -4,7 +4,7 @@ public class SudokuAgent {
 	private int[][] sudokuBoard;
 	private boolean[][] readOnly;
 	private Random oracle;
-	private boolean anneal,vb;
+	private boolean anneal, vb;
 	private final int maxTime = 100000, r = 100;
 
 	public SudokuAgent(int[][] sudokuBoard, boolean[][] readOnly, boolean anneal, boolean verbose) {
@@ -48,9 +48,7 @@ public class SudokuAgent {
 							y2=k;
 						}
 						
-						
 					}
-					
 					
 				}
 			}

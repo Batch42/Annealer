@@ -3,12 +3,8 @@ import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.Stack;
-
-import javax.swing.JFileChooser;
 
 /**
  * @author Derek Windahl, Isaac Freshour, and Steven Proctor
@@ -18,28 +14,39 @@ public class Application {
 	public static void main(String[] args) {
 
 		Scanner input = new Scanner(System.in);
-		JFileChooser fileFind = new JFileChooser();
 		File sudokuFile;
 		int[][] sudokuBoard = new int[25][];
 		boolean[][] readOnly = new boolean[25][];
-		Random rnd = new Random();
 
 		int choice = 0;
+		boolean verbose = false;
 
 		System.out.println("Please enter which problem you would like to run. ");
 		System.out.println("1 = n-Queens, 2 = Sudoku ");
 		System.out.print(">>");
 		choice = input.nextInt();
+		System.out.println("Please enter whether or not you would like verbose output. ");
+		System.out.println("1 = Yes, 2 = No");
+		System.out.print(">>");
+		if(input.nextInt() == 1) {
+			verbose = true;
+		} else {
+			verbose = false;
+		}
 
 		if (choice == 1) {
-
+			
+			System.out.println("\nPlease enter your 'n' value for this problem. ");
+			System.out.print(">>");
+			int nVal = input.nextInt();
+			
 		} else if (choice == 2) {
 			// Open a file browser to get the sudoku board .csv file
-			// fileFind.showOpenDialog(null);
-			// sudokuFile = fileFind.getSelectedFile();
+			System.out.println("\nPlease enter your sudoku file's name. ");
+			System.out.print(">>");
+			sudokuFile = new File(input.next());
 
-			try (BufferedReader reader = new BufferedReader(new FileReader(
-					"sudoku1.csv"))) {
+			try (BufferedReader reader = new BufferedReader(new FileReader(sudokuFile.getPath()))) {
 
 				String line = "";
 				
@@ -78,9 +85,9 @@ public class Application {
 					}
 					System.out.println();
 				}
-				System.out.println("Hill Climbing");
+				System.out.println("\nHill Climbing");
 				long time = System.currentTimeMillis();
-				int[][] solution = new SudokuAgent(sudokuBoard, readOnly,false,false).solve();
+				int[][] solution = new SudokuAgent(sudokuBoard, readOnly, false, verbose).solve();
 				System.out.println("Time: " + (System.currentTimeMillis()-time) + "ms");
 				for (i = 0; i < 25; i++) {
 					for (int j = 0; j < 25; j++) {
@@ -92,9 +99,9 @@ public class Application {
 					}
 					System.out.println();
 				}
-				System.out.println("Simulated Annealing");
+				System.out.println("\nSimulated Annealing");
 				time = System.currentTimeMillis();
-				solution = new SudokuAgent(sudokuBoard, readOnly,true,false).solve();
+				solution = new SudokuAgent(sudokuBoard, readOnly, true, verbose).solve();
 				System.out.println("Time: " + (System.currentTimeMillis()-time) + "ms");
 				for (i = 0; i < 25; i++) {
 					for (int j = 0; j < 25; j++) {
