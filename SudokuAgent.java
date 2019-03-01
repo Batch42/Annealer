@@ -4,11 +4,14 @@ public class SudokuAgent {
 	private int[][] sudokuBoard;
 	private boolean[][] readOnly;
 	private Random oracle;
-	private final int maxTime = 100, r = 5;
+	private boolean anneal,vb;
+	private final int maxTime = 100000, r = 100;
 
-	public SudokuAgent(int[][] sudokuBoard, boolean[][] readOnly) {
+	public SudokuAgent(int[][] sudokuBoard, boolean[][] readOnly, boolean anneal, boolean verbose) {
 		this.sudokuBoard = sudokuBoard;
 		this.readOnly = readOnly;
+		this.anneal = anneal;
+		this.vb = verbose;
 		oracle = new Random();
 	}
 
@@ -18,48 +21,56 @@ public class SudokuAgent {
 		while (notdone && timeout < maxTime) {
 			timeout++;
 			notdone = false;
-			int x1=-1,x2=-1,y1=-1,y2=-1;
+			
+			int bx=-1, y1=-1,y2=-1;
 			double val=0;
 			for (int i = 0; i < 25; i++) {
+				
 				for (int j = 0; j < 25; j++) {
 					if (readOnly[i][j])
 						continue;
 					if (getConflicts(i, j, sudokuBoard[i][j]) != 0)
 						notdone = true;
-
 					for (int k = 0; k < 25; k++) {
-						for (int l = 0; l < 25; l++) {
-							double temp = getConflicts(i,j, sudokuBoard[i][j])+getConflicts(k,l, sudokuBoard[k][l])
-								- (getConflicts(i,j, sudokuBoard[k][l])+getConflicts(k,l, sudokuBoard[i][j]))
-								+ r*oracle.nextDouble()*(maxTime-timeout)/maxTime;
-							if (temp>val) {
-								val = temp;
-								x1 = i;
-								y1=j;
-								x2=k;
-								y2=l;
-							}
+						if (readOnly[i][k])
+							continue;
+						double temp = getConflicts(i,j, sudokuBoard[i][j])+getConflicts(i,k, sudokuBoard[i][k])
+							- (getConflicts(i,j, sudokuBoard[i][k])+getConflicts(i,k, sudokuBoard[i][j]))
+							+ (anneal?r*oracle.nextDouble()*(maxTime-timeout)/maxTime:0);
+						if (vb) {
+							System.out.println("Considering Swapping "+sudokuBoard[i][j]+" at "+i+","+j+" with "+sudokuBoard[i][k]+" at "+i+","+k); 
+							System.out.println("Gain value is " + val);
 						}
+						if (temp>val) {
+							val = temp;
+							bx=i;
+							y1=j;
+							y2=k;
+						}
+						
 						
 					}
 					
 					
 				}
 			}
-			int temp = sudokuBoard[x1][y1];
-			sudokuBoard[x1][y1] = sudokuBoard[x2][y2];
-			sudokuBoard[x2][y2] = temp;
+			if(bx==-1) {
+				break;
+			}
+			System.out.println("Swapping "+sudokuBoard[bx][y1]+" at "+bx+","+y1+" with "+sudokuBoard[bx][y2]+" at "+bx+","+y2);
+			System.out.println("Gain value is " + val);
+			int temp = sudokuBoard[bx][y1];
+			sudokuBoard[bx][y1] = sudokuBoard[bx][y2];
+			sudokuBoard[bx][y2] = temp;
 			
 		}
-		if (timeout == maxTime) {
-			int totalerror=0;
-			for (int i = 0; i < 25; i++) {
-				for (int j = 0; j < 25; j++) {
-					totalerror+=getConflicts(i,j,sudokuBoard[i][j]);
-				}
-			}
-			System.out.println("Time! " + totalerror);
-		}
+		
+			
+		if(notdone)
+			System.out.println("Nonoptimal State");
+		else
+			System.out.println("Optimal State");
+		
 		return sudokuBoard;
 	}
 
@@ -80,7 +91,4 @@ public class SudokuAgent {
 		return count;
 	}
 
-	private void p(Object o) {
-		System.out.println(o);
-	}
 }
