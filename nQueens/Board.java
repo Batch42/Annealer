@@ -21,7 +21,7 @@ public class Board {
 			
 			this.x[rx]++;
 			this.y[i]++;
-			queens[i]=new Queen(rx,i,this);
+			queens[i]=new Queen(rx,i,0,this);//TODO replace 0 with temperature
 				
 		}
 		for (int i = 0; i<n; i++) {
@@ -29,6 +29,10 @@ public class Board {
 		}
 		
 		
+	}
+	
+	public int getN() {
+		return n;
 	}
 	
 	public synchronized void movex(int x1, int x2) {
