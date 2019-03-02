@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.util.Stack;
 
+
+
 /**
  * @author Derek Windahl, Isaac Freshour, and Steven Proctor
  */
@@ -39,6 +41,37 @@ public class Application {
 			System.out.println("\nPlease enter your 'n' value for this problem. ");
 			System.out.print(">>");
 			int nVal = input.nextInt();
+			
+			System.out.println("\nHill Climbing");
+			long time = System.currentTimeMillis();
+			boolean[][] solution = new Board(nVal,false,verbose).solve();
+			System.out.println("Time: " + (System.currentTimeMillis()-time) + "ms");
+			for (int i = 0; i < nVal; i++) {
+				for (int j = 0; j < nVal; j++) {
+					
+					if (solution[i][j]) 
+						System.out.print(" Q");
+					else
+						System.out.print(" =");
+					
+				}
+				System.out.println();
+			}
+			System.out.println("\nSimulated Annealing");
+			time = System.currentTimeMillis();
+			solution = new Board(nVal,true,verbose).solve();
+			System.out.println("Time: " + (System.currentTimeMillis()-time) + "ms");
+			for (int i = 0; i < nVal; i++) {
+				for (int j = 0; j < nVal; j++) {
+					
+					if (solution[i][j]) 
+						System.out.print(" Q");
+					else
+						System.out.print(" =");
+					
+				}
+				System.out.println();
+			}
 			
 		} else if (choice == 2) {
 			// Open a file browser to get the sudoku board .csv file

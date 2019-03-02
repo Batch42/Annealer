@@ -14,7 +14,8 @@ public class SudokuAgent {
 		this.vb = verbose;
 		oracle = new Random();
 	}
-
+	
+	
 	public int[][] solve() {
 		boolean notdone = true;
 		int timeout = 0;
@@ -24,6 +25,12 @@ public class SudokuAgent {
 			
 			int bx=-1, y1=-1,y2=-1;
 			double val=0;
+			/*
+			 * The solution is such that each digit will be in its own row, therefore, the problem space
+			 * can be reconstructed as tiles in a given row swapping x values. Randomizing these swaps
+			 * through simulated annealling will lead to a more optimal solution at least as well as hill climbing
+			 * because it will eventually become hill climbing but also overcome local maxima as it "cools."
+			 */
 			for (int i = 0; i < 25; i++) {
 				
 				for (int j = 0; j < 25; j++) {
@@ -64,8 +71,15 @@ public class SudokuAgent {
 		}
 		
 			
-		if(notdone)
-			System.out.println("Nonoptimal State");
+		if(notdone) {
+			int remaining = 0;
+			for (int i = 0; i < 25; i++) {
+				for (int j = 0; j < 25; j++) {
+					remaining+=getConflicts(i,j,sudokuBoard[i][j])>0?1:0;
+				}
+			}
+			System.out.println("Non-optimal state, " + remaining + " tiles in conflict. ");
+		}
 		else
 			System.out.println("Optimal State");
 		
